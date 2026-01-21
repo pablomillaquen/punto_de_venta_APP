@@ -1,0 +1,76 @@
+<div class="container-fluid">
+    <h2 class="mb-4">Registro de Ventas</h2>
+
+    <!-- Filters -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Fecha</label>
+                    <input type="date" class="form-control" [(ngModel)]="filterDate" (change)="onFilterChange()">
+                </div>
+                <div class="col-md-3" *ngIf="userRole === 'admin'">
+                    <label class="form-label">Sucursal</label>
+                    <select class="form-select" [(ngModel)]="filterBranch" (change)="onFilterChange()">
+                        <option value="">Todas las Sucursales</option>
+                        <option *ngFor="let branch of branches" [value]="branch._id">{{ branch.name }}</option>
+                    </select>
+                </div>
+                <!-- Metric Card integrated into Filter Row or kept separate? Kept separate for visual hierarchy but updated label -->
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-outline-danger" (click)="downloadReport()" title="Descargar PDF">
+                        <i class="bi bi-file-earmark-pdf me-2"></i> Reporte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Ventas (Selección)</h5>
+                    <div class="display-6 fw-bold">{{ todayTotal | clpCurrency }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID Venta</th>
+                        <th>Fecha</th>
+                        <th>Sucursal</th>
+                        <th>Cajero</th>
+                        <th>Total</th>
+                        <th>Método</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let sale of sales">
+                        <td>{{ getShortId(sale) | uppercase }}</td>
+                        <td>{{ sale.createdAt | date:'short' }}</td>
+                        <td>{{ sale.branch?.name || '-' }}</td>
+                        <td>{{ sale.user?.name || '-' }}</td>
+                        <td class="fw-bold">{{ sale.totalAmount | clpCurrency }}</td>
+                        <td>
+                            <i class="bi"
+                                [ngClass]="{'bi-cash': sale.paymentMethod === 'cash', 'bi-credit-card': sale.paymentMethod === 'transbank'}">
+                            </i>
+                            {{ sale.paymentMethod | titlecase }}
+                        </td>
+                        <td>
+                            <span class="badge bg-success" *ngIf="sale.status === 'completed'">Completada</span>
+                            <span class="badge bg-danger" *ngIf="sale.status === 'cancelled'">Anulada</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
