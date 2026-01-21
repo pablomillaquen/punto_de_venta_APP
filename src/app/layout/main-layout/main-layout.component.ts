@@ -5,12 +5,23 @@ import { AuthService } from '../../core/services/auth.service';
 import { CashService } from '../../core/services/cash.service';
 import { FormsModule } from '@angular/forms';
 import { ClpCurrencyPipe } from '../../shared/pipes/clp-currency.pipe';
+import { StartShiftModalComponent } from './modals/start-shift-modal/start-shift-modal.component';
+import { CloseShiftModalComponent } from './modals/close-shift-modal/close-shift-modal.component';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterModule, FormsModule, ClpCurrencyPipe],
+  imports: [
+    CommonModule, 
+    RouterOutlet, 
+    RouterModule, 
+    FormsModule, 
+    ClpCurrencyPipe,
+    StartShiftModalComponent,
+    CloseShiftModalComponent
+  ],
   templateUrl: './main-layout.component.html',
+
   styles: [`
     :host { display: block; height: 100%; }
     

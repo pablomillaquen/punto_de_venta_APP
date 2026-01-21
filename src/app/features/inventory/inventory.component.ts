@@ -6,11 +6,22 @@ import { AuthService } from '../../core/services/auth.service';
 import { InventoryService } from '../../core/services/inventory.service';
 import { ProductService } from '../../core/services/product.service';
 import { BranchService } from '../../core/services/branch.service';
+import { ProductFormModalComponent } from './modals/product-form-modal/product-form-modal.component';
+import { StockFormModalComponent } from './modals/stock-form-modal/stock-form-modal.component';
+import { ImportModalComponent } from './modals/import-modal/import-modal.component';
+import { TransferModalComponent } from './modals/transfer-modal/transfer-modal.component';
 
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    ProductFormModalComponent,
+    StockFormModalComponent,
+    ImportModalComponent,
+    TransferModalComponent
+  ],
   templateUrl: './inventory.component.html',
   styles: []
 })

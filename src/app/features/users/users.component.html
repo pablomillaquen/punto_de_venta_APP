@@ -100,51 +100,7 @@
     </div>
 </div>
 
-<!-- Modal (Basic implementation using CSS for simplicity in MVP) -->
-<div class="modal d-block" tabindex="-1" *ngIf="isModalOpen" style="background: rgba(0,0,0,0.5)">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ isEditing ? 'Editar Usuario' : 'Nuevo Usuario' }}</h5>
-                <button type="button" class="btn-close" (click)="closeModal()"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" [(ngModel)]="userForm.name" name="name">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" [(ngModel)]="userForm.email" name="email">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" [(ngModel)]="userForm.password" name="password"
-                            placeholder="{{ isEditing ? '(Dejar en blanco para no cambiar)' : '' }}">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Rol</label>
-                        <select class="form-select" [(ngModel)]="userForm.role" name="role">
-                            <option value="admin">Admin</option>
-                            <option value="supervisor">Supervisor</option>
-                            <option value="cajero">Cajero</option>
-                            <option value="bodega">Bodega</option>
-                        </select>
-                    </div>
-                    <div class="mb-3" *ngIf="userForm.role !== 'admin'">
-                        <label class="form-label">Sucursal</label>
-                        <select class="form-select" [(ngModel)]="userForm.branch" name="branch">
-                            <option value="">Seleccione Sucursal</option>
-                            <option *ngFor="let branch of branches" [value]="branch._id">{{ branch.name }}</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="saveUser()">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- User Form Modal -->
+<app-user-form-modal [isOpen]="isModalOpen" [isEditing]="isEditing" [userForm]="userForm" [branches]="branches"
+    (close)="closeModal()" (save)="saveUser()">
+</app-user-form-modal>

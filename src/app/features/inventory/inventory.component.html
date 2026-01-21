@@ -152,228 +152,25 @@
     </div>
 </div>
 
-<!-- Product Modal -->
-<div class="modal d-block" tabindex="-1" *ngIf="isProductModalOpen" style="background: rgba(0,0,0,0.5)">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ isEditingProduct ? 'Editar Producto' : 'Nuevo Producto' }}</h5>
-                <button type="button" class="btn-close" (click)="closeProductModal()"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" [(ngModel)]="productForm.name" name="name">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Código de Barras</label>
-                        <input type="text" class="form-control" [(ngModel)]="productForm.barcode" name="barcode">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Precio</label>
-                            <input type="number" class="form-control" [(ngModel)]="productForm.price" name="price">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Costo</label>
-                            <input type="number" class="form-control" [(ngModel)]="productForm.cost" name="cost">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">IVA (%)</label>
-                        <input type="number" class="form-control" [(ngModel)]="productForm.taxRate" name="taxRate">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeProductModal()">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="saveProduct()">Guardar</button>
-            </div>
-        </div>
-    </div>
+</div>
 </div>
 
-<!-- Stock Modal -->
-<div class="modal d-block" tabindex="-1" *ngIf="isStockModalOpen" style="background: rgba(0,0,0,0.5)">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Ingreso de Stock</h5>
-                <button type="button" class="btn-close" (click)="closeStockModal()"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Buscar por Código de Barras</label>
-                        <input type="text" class="form-control" (change)="onBarcodeChange($event)"
-                            placeholder="Escanear producto..." autofocus>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Producto</label>
-                        <select class="form-select" [(ngModel)]="stockForm.productId" name="productId"
-                            [disabled]="!!stockForm.productId && !!stockForm.branchId">
-                            <option value="">Seleccione Producto</option>
-                            <option *ngFor="let p of products" [value]="p._id">{{ p.name }} ({{ p.barcode }})</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Sucursal</label>
-                        <select class="form-select" [(ngModel)]="stockForm.branchId" name="branchId"
-                            [disabled]="userRole === 'supervisor' || (!!stockForm.productId && !!stockForm.branchId)">
-                            <option value="">Seleccione Sucursal</option>
-                            <option *ngFor="let b of branches" [value]="b._id">{{ b.name }}</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Cantidad a Agregar</label>
-                        <input type="number" class="form-control" [(ngModel)]="stockForm.quantity" name="quantity">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Lote</label>
-                            <input type="text" class="form-control" [(ngModel)]="stockForm.lot" name="lot">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Vencimiento</label>
-                            <input type="date" class="form-control" [(ngModel)]="stockForm.expiry" name="expiry">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeStockModal()">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="saveStock()">Agregar Stock</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Product Form Modal -->
+<app-product-form-modal [isOpen]="isProductModalOpen" [isEditing]="isEditingProduct" [productForm]="productForm"
+    (close)="closeProductModal()" (save)="saveProduct()">
+</app-product-form-modal>
 
-<!-- Excel Import Modal -->
-<div class="modal d-block" tabindex="-1" *ngIf="isImportModalOpen" style="background: rgba(0,0,0,0.5)">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Carga Masiva de Stock (Excel)</h5>
-                <button type="button" class="btn-close" (click)="closeImportModal()"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Upload Section -->
-                <div class="mb-4" *ngIf="importPreviewData.length === 0">
-                    <label class="form-label">Seleccionar Archivo (.xlsx, .xls, .csv)</label>
-                    <input type="file" class="form-control" (change)="handleFileUpload($event)"
-                        accept=".xlsx, .xls, .csv">
-                    <div class="mt-2 text-end">
-                        <small><a href="#" (click)="downloadTemplate(); $event.preventDefault()">Descargar
-                                Plantilla</a></small>
-                    </div>
-                </div>
+<!-- Stock Form Modal -->
+<app-stock-form-modal [isOpen]="isStockModalOpen" [stockForm]="stockForm" [products]="products" [branches]="branches"
+    [userRole]="userRole" (close)="closeStockModal()" (save)="saveStock()" (barcodeChange)="onBarcodeChange($event)">
+</app-stock-form-modal>
 
-                <!-- Preview Section -->
-                <div *ngIf="importPreviewData.length > 0">
-                    <h6>Vista Previa</h6>
-                    <div class="table-responsive" style="max-height: 400px;">
-                        <table class="table table-sm table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Fila</th>
-                                    <th>Cód. Barra</th>
-                                    <th>Producto</th>
-                                    <th>Sucursal</th>
-                                    <th>Cant.</th>
-                                    <th>Lote</th>
-                                    <th>Venc.</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let row of importPreviewData"
-                                    [ngClass]="{'table-danger': row.status === 'Error'}">
-                                    <td>{{ row.row }}</td>
-                                    <td>{{ row.barcode }}</td>
-                                    <td>{{ row.productName }}</td>
-                                    <td>{{ row.branchName }}</td>
-                                    <td>
-                                        <input type="number" class="form-control form-control-sm"
-                                            [(ngModel)]="row.quantity" style="width: 80px">
-                                    </td>
-                                    <td>{{ row.lot }}</td>
-                                    <td>{{ row.expiry | date:'shortDate' }}</td>
-                                    <td>
-                                        <span class="badge"
-                                            [ngClass]="{'bg-success': row.status === 'Valid', 'bg-danger': row.status === 'Error'}">
-                                            {{ row.status }}
-                                        </span>
-                                        <small *ngIf="row.error" class="d-block text-danger">{{ row.error }}</small>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeImportModal()">Cancelar</button>
-                <button type="button" class="btn btn-success" *ngIf="importPreviewData.length > 0"
-                    (click)="confirmImport()">
-                    <i class="bi bi-check-circle me-2"></i> Confirmar Importación
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Import Modal -->
+<app-import-modal [isOpen]="isImportModalOpen" [importPreviewData]="importPreviewData" (close)="closeImportModal()"
+    (fileUpload)="handleFileUpload($event)" (confirmImport)="confirmImport()" (downloadTemplate)="downloadTemplate()">
+</app-import-modal>
 
 <!-- Transfer Modal -->
-<div class="modal d-block" tabindex="-1" *ngIf="isTransferModalOpen"
-    style="background: rgba(0,0,0,0.5); overflow-y: auto;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Traspaso de Mercadería</h5>
-                <button type="button" class="btn-close" (click)="closeTransferModal()"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="fw-bold">Origen:</label> {{ transferForm.fromBranchName }}
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Sucursal Destino</label>
-                    <select class="form-select" [(ngModel)]="transferForm.toBranchId">
-                        <option value="">Seleccione Destino</option>
-                        <option *ngFor="let b of branches" [value]="b._id"
-                            [disabled]="b._id === transferForm.fromBranchId">
-                            {{ b.name }}
-                        </option>
-                    </select>
-                </div>
-
-                <h6>Ítems a Traspasar</h6>
-                <div class="table-responsive" style="max-height: 300px;">
-                    <table class="table table-sm text-center">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Disp.</th>
-                                <th>Cant.</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of transferForm.items">
-                                <td class="text-start">{{ item.productName }}</td>
-                                <td>{{ item.maxQty }}</td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm"
-                                        [(ngModel)]="item.quantity" [max]="item.maxQty" min="1">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeTransferModal()">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="confirmTransfer()">Confirmar Traspaso</button>
-            </div>
-        </div>
-    </div>
-</div>
+<app-transfer-modal [isOpen]="isTransferModalOpen" [transferForm]="transferForm" [branches]="branches"
+    (close)="closeTransferModal()" (confirm)="confirmTransfer()">
+</app-transfer-modal>

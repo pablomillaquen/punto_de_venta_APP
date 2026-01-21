@@ -75,51 +75,10 @@
 </div>
 
 <!-- Start Shift Modal -->
-<div class="modal d-block" tabindex="-1" *ngIf="isStartShiftModalOpen" style="background: rgba(0,0,0,0.8)">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Iniciar Nuevo Turno de Caja</h5>
-            </div>
-            <div class="modal-body">
-                <p>Por favor, ingrese el monto inicial de efectivo en caja.</p>
-                <div class="mb-3">
-                    <label class="form-label">Monto Apertura</label>
-                    <input type="number" class="form-control" [(ngModel)]="shiftForm.startAmount">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="startShift()">Iniciar Turno</button>
-            </div>
-        </div>
-    </div>
-</div>
+<app-start-shift-modal [isOpen]="isStartShiftModalOpen" [shiftForm]="shiftForm" (save)="startShift()">
+</app-start-shift-modal>
 
 <!-- Close Shift Modal -->
-<div class="modal d-block" tabindex="-1" *ngIf="isCloseShiftModalOpen" style="background: rgba(0,0,0,0.5)">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Realizar Corte de Caja</h5>
-                <button type="button" class="btn-close" (click)="closeCloseShiftModal()"></button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-info">
-                    <small>Se cerrará el turno actual y se contabilizarán las ventas.</small>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Efectivo Real en Caja</label>
-                    <input type="number" class="form-control" [(ngModel)]="shiftForm.actualCash">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Observaciones</label>
-                    <textarea class="form-control" [(ngModel)]="shiftForm.observations" rows="2"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeCloseShiftModal()">Cancelar</button>
-                <button type="button" class="btn btn-danger" (click)="closeShift()">Confirmar Corte</button>
-            </div>
-        </div>
-    </div>
-</div>
+<app-close-shift-modal [isOpen]="isCloseShiftModalOpen" [shiftForm]="shiftForm" (close)="closeCloseShiftModal()"
+    (confirm)="closeShift()">
+</app-close-shift-modal>

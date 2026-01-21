@@ -1,0 +1,71 @@
+<div class="modal d-block" tabindex="-1" *ngIf="isOpen" style="background: rgba(0,0,0,0.5)">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Carga Masiva de Stock (Excel)</h5>
+                <button type="button" class="btn-close" (click)="onClose()"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Upload Section -->
+                <div class="mb-4" *ngIf="importPreviewData.length === 0">
+                    <label class="form-label">Seleccionar Archivo (.xlsx, .xls, .csv)</label>
+                    <input type="file" class="form-control" (change)="onFileUpload($event)" accept=".xlsx, .xls, .csv">
+                    <div class="mt-2 text-end">
+                        <small><a href="#" (click)="onDownloadTemplate(); $event.preventDefault()">Descargar
+                                Plantilla</a></small>
+                    </div>
+                </div>
+
+                <!-- Preview Section -->
+                <div *ngIf="importPreviewData.length > 0">
+                    <h6>Vista Previa</h6>
+                    <div class="table-responsive" style="max-height: 400px;">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Fila</th>
+                                    <th>Cód. Barra</th>
+                                    <th>Producto</th>
+                                    <th>Sucursal</th>
+                                    <th>Cant.</th>
+                                    <th>Lote</th>
+                                    <th>Venc.</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of importPreviewData"
+                                    [ngClass]="{'table-danger': row.status === 'Error'}">
+                                    <td>{{ row.row }}</td>
+                                    <td>{{ row.barcode }}</td>
+                                    <td>{{ row.productName }}</td>
+                                    <td>{{ row.branchName }}</td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm"
+                                            [(ngModel)]="row.quantity" style="width: 80px">
+                                    </td>
+                                    <td>{{ row.lot }}</td>
+                                    <td>{{ row.expiry | date:'shortDate' }}</td>
+                                    <td>
+                                        <span class="badge"
+                                            [ngClass]="{'bg-success': row.status === 'Valid', 'bg-danger': row.status === 'Error'}">
+                                            {{ row.status }}
+                                        </span>
+                                        <small *ngIf="row.error" class="d-block text-danger">{{ row.error }}</small>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="onClose()">Cancelar</button>
+                <button type="button" class="btn btn-success" *ngIf="importPreviewData.length > 0"
+                    (click)="onConfirmImport()">
+                    <i class="bi bi-check-circle me-2"></i> Confirmar Importación
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

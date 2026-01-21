@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { BranchService } from '../../core/services/branch.service';
+import { UserFormModalComponent } from './modals/user-form-modal/user-form-modal.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UserFormModalComponent],
   templateUrl: './users.component.html',
   styles: []
 })

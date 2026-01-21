@@ -1,0 +1,53 @@
+<div class="modal d-block" tabindex="-1" *ngIf="isOpen" style="background: rgba(0,0,0,0.5)">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ingreso de Stock</h5>
+                <button type="button" class="btn-close" (click)="onClose()"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Buscar por Código de Barras</label>
+                        <input type="text" class="form-control" (change)="onBarcodeChange($event)"
+                            placeholder="Escanear producto..." autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Producto</label>
+                        <select class="form-select" [(ngModel)]="stockForm.productId" name="productId"
+                            [disabled]="!!stockForm.productId && !!stockForm.branchId">
+                            <option value="">Seleccione Producto</option>
+                            <option *ngFor="let p of products" [value]="p._id">{{ p.name }} ({{ p.barcode }})</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sucursal</label>
+                        <select class="form-select" [(ngModel)]="stockForm.branchId" name="branchId"
+                            [disabled]="userRole === 'supervisor' || (!!stockForm.productId && !!stockForm.branchId)">
+                            <option value="">Seleccione Sucursal</option>
+                            <option *ngFor="let b of branches" [value]="b._id">{{ b.name }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cantidad a Agregar</label>
+                        <input type="number" class="form-control" [(ngModel)]="stockForm.quantity" name="quantity">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Lote</label>
+                            <input type="text" class="form-control" [(ngModel)]="stockForm.lot" name="lot">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Vencimiento</label>
+                            <input type="date" class="form-control" [(ngModel)]="stockForm.expiry" name="expiry">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="onClose()">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="onSave()">Agregar Stock</button>
+            </div>
+        </div>
+    </div>
+</div>
